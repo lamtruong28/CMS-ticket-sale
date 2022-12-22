@@ -1,0 +1,50 @@
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-light:not(
+        .ant-menu-horizontal
+    ) {
+    .ant-menu-item:not(.ant-menu-item-selected):active,
+    .ant-menu-item-selected {
+        background-color: var(--yellow-color);
+        color: var(--white-color);
+        font-weight: 700;
+        font-size: 1.8rem;
+
+        .ant-menu-item-icon {
+            color: var(--white-color);
+        }
+    }
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-inline .ant-menu-item {
+    width: 100%;
+    margin: 8px 0;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1.8rem;
+}
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-inline
+    > .ant-menu-submenu
+    > .ant-menu-submenu-title,
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-light
+    .ant-menu-submenu-selected
+    > .ant-menu-submenu-title {
+    font-weight: 500;
+    font-size: 1.8rem;
+    margin: 0;
+
+    &:hover {
+        cursor: default;
+        background-color: unset;
+    }
+}
+
+:where(
+        .css-dev-only-do-not-override-26rdvq
+    ).ant-menu-light.ant-menu-root.ant-menu-inline {
+    border: none;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-light.ant-menu-inline
+    .ant-menu-sub.ant-menu-inline {
+    background-color: var(--white-color);
+    margin: -8px 0;
+}

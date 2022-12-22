@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap");
+
+:root {
+    --font-family: "Montserrat", sans-serif;
+
+    --end-color: #fd5959;
+    --light-blue-color: #27aef9;
+
+    --text-color: #1e0d03;
+    --promote-color: #03ac00;
+    --white-color: #ffffff;
+
+    //Yellow color:
+    --yellow-color: #ffb800;
+    --yellow-color-05: #ffd2a8;
+    --yellow-color-1: #ff993c;
+    --yellow-color-2: #c55e00;
+    --yellow-color-3: #ffba7b;
+
+    //Grey color:
+    --grey-color: #888888;
+    --grey-color-1: #f7f8fb;
+    --grey-color-2: #f1f4f8;
+    --grey-color-3: #e0e0e0;
+    --grey-color-4: #a5a8b1;
+    --grey-color-5: #919dba;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%; // 1rem ~ 10px
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+}
+
+//Override CSS antd
+:where(.css-dev-only-do-not-override-26rdvq)[class^="ant-col"],
+:where(.css-dev-only-do-not-override-26rdvq)[class*=" ant-col"] {
+    font-family: var(--font-family);
+}
