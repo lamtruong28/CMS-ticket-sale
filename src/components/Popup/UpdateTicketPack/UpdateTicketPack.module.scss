@@ -1,0 +1,70 @@
+.wrapper {
+    width: 758px;
+    padding: 24px 32px 32px;
+    background-color: var(--white-color);
+    border-radius: 16px;
+
+    .heading {
+        font-size: 2.4rem;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .label {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-top: 24px;
+        margin-bottom: 8px;
+    }
+
+    .name {
+        width: 360px;
+        height: 40px;
+    }
+
+    .time-picker,
+    .date-picker {
+        width: 140px;
+        height: 40px;
+        margin-right: 8px;
+    }
+
+    .d-flex {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.6rem;
+
+        + .d-flex {
+            margin-top: 12px;
+        }
+    }
+
+    .input {
+        height: 40px;
+        width: 148px;
+    }
+
+    .quantity {
+        width: 72px;
+    }
+
+    .select {
+        width: 170px;
+        margin-bottom: 16px;
+        font-size: 1.6rem;
+    }
+
+    .wrap-button {
+        text-align: center;
+        margin-top: 32px;
+        .button {
+            width: 160px;
+            height: 48px;
+
+            + .button {
+                margin-left: 24px;
+            }
+        }
+    }
+}

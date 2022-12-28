@@ -1,0 +1,61 @@
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper .ant-table {
+    font-family: var(--font-family);
+    flex: 1;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper
+    .ant-table-tbody
+    > tr.ant-table-row:hover
+    > td,
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper
+    .ant-table-tbody
+    > tr
+    > td.ant-table-cell-row-hover {
+    background-color: inherit;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper
+    .ant-table-tbody
+    > tr
+    > td {
+    border-top: none;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper
+    .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(
+        .ant-table-row-expand-icon-cell
+    ):not([colspan])::before {
+    display: none;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-table-wrapper
+    .ant-table-pagination-right {
+    justify-content: center;
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-pagination
+    .ant-pagination-item-active:hover
+    a,
+:where(.css-dev-only-do-not-override-26rdvq).ant-pagination
+    .ant-pagination-item-active
+    a {
+    color: var(--yellow-color-1);
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-pagination
+    .ant-pagination-item-active:hover,
+:where(.css-dev-only-do-not-override-26rdvq).ant-pagination
+    .ant-pagination-item-active {
+    border-color: var(--yellow-color-1);
+}
+
+:where(.css-dev-only-do-not-override-26rdvq).ant-spin-nested-loading
+    .ant-spin-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - 288px);
+    max-height: 960px;
+}

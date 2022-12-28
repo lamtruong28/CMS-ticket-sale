@@ -1,0 +1,56 @@
+.wrapper {
+    width: 634px;
+    padding: 24px 32px;
+    background-color: var(--white-color);
+    border-radius: 16px;
+
+    .heading {
+        font-weight: 700;
+        font-size: 2.4rem;
+        text-align: center;
+    }
+
+    .date-time {
+        display: flex;
+    }
+
+    .calendar {
+        width: 143px;
+        height: 40px;
+        padding: 10px 12px;
+        cursor: pointer;
+    }
+
+    .label {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 6px;
+    }
+
+    .options {
+        display: flex;
+        gap: 0 40px;
+    }
+    .options-2 {
+        display: flex;
+        gap: 14px 110px;
+        flex-wrap: wrap;
+
+        > div {
+            min-width: 90px;
+        }
+    }
+
+    .filter-btn {
+        position: relative;
+        width: 160px;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 40px;
+    }
+}
+
+:where(.css-dev-only-do-not-override-26rdvq)label {
+    font-size: 1.6rem !important;
+}

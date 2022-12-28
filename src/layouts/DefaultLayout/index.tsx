@@ -1,18 +1,25 @@
 import classNames from "classnames/bind";
-import { Row, Col } from "antd";
 import styles from "./DefaultLayout.module.scss";
 import Menu from "../components/Menu";
 import { IChildren } from "~/interface";
+import Search from "~/components/Search";
+import Actions from "../components/Actions";
 
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }: IChildren) {
     return (
-        <Row className={cx("wrapper")}>
-            <Col span={5} className={cx("left")}>
+        <div className={cx("wrapper")}>
+            <div className={cx("left")}>
                 <Menu />
-            </Col>
-            <Col span={19}>{children}</Col>
-        </Row>
+            </div>
+            <div className={cx("right")}>
+                <div className={cx("top")}>
+                    <Search className={cx("search-box")} placeholder="Search" />
+                    <Actions />
+                </div>
+                <div className={cx("children")}>{children}</div>
+            </div>
+        </div>
     );
 }
 

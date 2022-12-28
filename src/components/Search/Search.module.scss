@@ -1,0 +1,29 @@
+.wrapper {
+    position: relative;
+    border-radius: 8px;
+}
+
+.text-box {
+    width: 100%;
+    height: 48px;
+    font-family: var(--font-family);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    padding: 10px 60px 10px 16px;
+    color: var(--text-color);
+    background-color: #ededed;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    transition: all linear 0.3s;
+}
+.icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    pointer-events: none;
+}

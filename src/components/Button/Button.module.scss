@@ -1,0 +1,74 @@
+.wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all linear 0.25s;
+    background-color: var(--white-color);
+    border: 1px solid transparent;
+    user-select: none;
+
+    + .wrapper {
+        margin-left: 16px;
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    text-align: center;
+}
+
+// Button types:
+.primary {
+    background: var(--yellow-color-1);
+    color: var(--white-color);
+
+    &:hover {
+        opacity: 0.9;
+    }
+}
+
+.secondary {
+    border-color: rgba(22, 24, 35, 0.12);
+    color: var(--text-color);
+    font-weight: 500;
+
+    &:hover {
+        background-color: rgba(22, 24, 35, 0.03);
+    }
+}
+
+.outline {
+    border-color: var(--yellow-color-1);
+    color: var(--yellow-color-1);
+
+    &:hover {
+        background-color: rgba(255, 153, 60, 0.15);
+    }
+}
+
+.rounded {
+    border-radius: 999px;
+}
+
+// Button size:
+.smaill {
+    padding: 4px 12px;
+}
+
+.large {
+    padding: 12px 24px;
+}

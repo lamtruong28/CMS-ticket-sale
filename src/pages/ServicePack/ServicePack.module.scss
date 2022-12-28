@@ -1,0 +1,39 @@
+.wrapper {
+    min-height: calc(100vh - 116px);
+    padding: 24px 32px;
+    background-color: var(--white-color);
+    border-radius: 24px;
+
+    .heading {
+        font-size: 3.6rem;
+        font-weight: 700;
+        margin-bottom: 32px;
+    }
+
+    .filter {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 24px;
+
+        .search-box {
+            width: 446px;
+        }
+
+        .actions {
+            .button {
+                height: 48px;
+                + .button {
+                    margin-left: 24px;
+                }
+            }
+        }
+    }
+
+    .edit-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--yellow-color-1);
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,71 @@
+// Checkbox
+.item {
+    display: inline-flex;
+    align-items: center;
+    transition: all linear 0.2s;
+
+    &:hover .box {
+        border-color: #27aef9;
+    }
+
+    label {
+        font-size: 1.6rem;
+        font-weight: 500;
+        padding-left: 8px;
+        user-select: none;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    input {
+        display: none;
+        &:checked {
+            + .box::after {
+                opacity: 1;
+                transform: rotate(45deg) scale(1) translate(-50%, -50%);
+                transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+            }
+
+            + .box {
+                background-color: #27aef9;
+                border-color: #27aef9;
+            }
+        }
+    }
+
+    .box {
+        position: relative;
+        width: 1.6rem;
+        height: 1.6rem;
+        border: 1px solid #a5a8b1;
+        border-radius: 4px;
+        transition: all linear 0.2s;
+        flex-shrink: 0;
+        cursor: pointer;
+        &::after {
+            position: absolute;
+            box-sizing: border-box;
+            top: 50%;
+            inset-inline-start: 21.5%;
+            display: table;
+            width: 5.7142857142857135px;
+            height: 9.142857142857142px;
+            border: 2px solid #fff;
+            border-top: 0;
+            border-inline-start: 0;
+            transform: rotate(45deg) scale(0) translate(-50%, -50%);
+            opacity: 0;
+            content: "";
+            transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),
+                opacity 0.1s;
+        }
+    }
+}
+
+// Group checkbox
+
+.group {
+    display: inline-flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}

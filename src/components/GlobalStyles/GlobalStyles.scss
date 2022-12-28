@@ -38,11 +38,92 @@ html {
 
 body {
     font-family: var(--font-family);
+    font-size: 1.6rem;
     color: var(--text-color);
+    overflow: overlay;
+}
+
+// custom scrollbar:
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+    height: 8px;
+}
+
+html *::-webkit-scrollbar-thumb {
+    border-radius: 43px;
+    background-color: rgba(255, 153, 60, 0.4);
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 //Override CSS antd
 :where(.css-dev-only-do-not-override-26rdvq)[class^="ant-col"],
 :where(.css-dev-only-do-not-override-26rdvq)[class*=" ant-col"] {
     font-family: var(--font-family);
+}
+
+.status {
+    position: relative;
+    padding: 8px 10px 8px 24px;
+    border: 1px solid;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 1.2rem;
+    white-space: nowrap;
+
+    &::before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: 10px;
+        width: 8px;
+        height: 8px;
+        transform: translateY(-50%);
+        border-radius: 50%;
+    }
+
+    &.used {
+        color: var(--grey-color-5);
+        background-color: #eaf1f8;
+        &::before {
+            background-color: var(--grey-color-5);
+        }
+    }
+    &.is-applying,
+    &.not-used-yet {
+        color: var(--promote-color);
+        background-color: #eaf1f8;
+        &::before {
+            background-color: var(--promote-color);
+        }
+    }
+    &.off,
+    &.expire {
+        color: var(--end-color);
+        background-color: #f8ebe8;
+        &::before {
+            background-color: var(--end-color);
+        }
+    }
+}
+
+.required {
+    color: var(--end-color);
+    font-weight: bold;
 }

@@ -1,0 +1,26 @@
+.wrapper {
+    min-height: calc(100vh - 116px);
+    background-color: var(--white-color);
+    padding: 24px;
+    border-radius: 24px;
+
+    .filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 32px 0;
+
+        .search-box {
+            width: 446px;
+        }
+    }
+}
+
+.wrap-button {
+    display: flex;
+    align-items: center;
+}
+
+.more-btn {
+    cursor: pointer;
+}

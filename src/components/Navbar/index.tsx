@@ -32,7 +32,7 @@ const items: MenuProps["items"] = [
         getItem("Gói dịch vụ", "/service-pack"),
     ]),
 ];
-const Navbar: React.FC = () => {
+const Navbar = () => {
     const { pathname } = useLocation();
     const [selected, setSelected] = useState(pathname);
     // const dispatch = useAppDispatch();

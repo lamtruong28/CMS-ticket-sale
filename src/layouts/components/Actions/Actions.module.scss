@@ -1,0 +1,11 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0 24px;
+
+    .label {
+        display: block;
+        line-height: 0;
+        cursor: pointer;
+    }
+}

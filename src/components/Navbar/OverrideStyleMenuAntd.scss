@@ -1,3 +1,7 @@
+:where(.css-dev-only-do-not-override-26rdvq).ant-menu-light {
+    background-color: transparent;
+}
+
 :where(.css-dev-only-do-not-override-26rdvq).ant-menu-light:not(
         .ant-menu-horizontal
     ) {
@@ -45,6 +49,6 @@
 
 :where(.css-dev-only-do-not-override-26rdvq).ant-menu-light.ant-menu-inline
     .ant-menu-sub.ant-menu-inline {
-    background-color: var(--white-color);
+    background-color: transparent;
     margin: -8px 0;
 }

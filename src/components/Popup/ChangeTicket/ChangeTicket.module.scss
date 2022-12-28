@@ -1,0 +1,44 @@
+.wrapper {
+    width: 750px;
+    padding: 24px 32px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+
+    .heading {
+        font-size: 2.4rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .row {
+        margin-bottom: 20px;
+    }
+
+    .label {
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    .value {
+        font-size: 1.6rem;
+        font-weight: 500;
+    }
+
+    .date-picker {
+        width: 140px;
+        height: 40px;
+    }
+
+    .wrap-button {
+        text-align: center;
+    }
+
+    .button {
+        width: 160px;
+        margin-top: 32px;
+        + .button {
+            margin-left: 24px;
+        }
+    }
+}

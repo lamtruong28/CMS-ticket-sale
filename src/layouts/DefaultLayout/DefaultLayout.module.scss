@@ -1,7 +1,25 @@
 .wrapper {
-    padding: 16px 32px 32px;
+    display: flex;
+    gap: 36px;
+    max-width: 1920px;
     min-height: 100vh;
+    margin: 0 auto;
+    padding: 16px 32px 32px;
+    background-color: #f9f6f4;
     .left {
         width: 252px;
+        flex-shrink: 0;
+    }
+
+    .right {
+        flex: 1;
+        .top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            width: 470px;
+        }
     }
 }
