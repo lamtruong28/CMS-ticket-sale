@@ -1,11 +1,9 @@
-import { Col, DatePicker, DatePickerProps, Row } from "antd";
+import { Col, DatePicker, Row } from "antd";
 import classNames from "classnames/bind";
 import ReactApexChart from "react-apexcharts";
 import styles from "./Home.module.scss";
 
 const cx = classNames.bind(styles);
-const customFormat: DatePickerProps["format"] = (value) =>
-    `Tháng ${value.format("MM,YYYY")}`;
 
 const series = [
     {
@@ -77,7 +75,7 @@ const Home = () => {
                         format={(value) => `Tháng ${value.format("MM,YYYY")}`}
                     />
                 </Col>
-                <Col span={7}>
+                <Col span={7} className={cx("col")}>
                     <p className={cx("label")}>Gói gia đình</p>
                     <ReactApexChart
                         options={{
@@ -95,7 +93,7 @@ const Home = () => {
                         width={350}
                     />
                 </Col>
-                <Col span={7}>
+                <Col span={7} className={cx("col")}>
                     <p className={cx("label")}>Gói sự kiện</p>
                     <ReactApexChart
                         options={{

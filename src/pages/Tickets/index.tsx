@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import Button from "~/components/Button";
 import { FilterIcon, MoreIcon } from "~/components/Icons";
@@ -8,6 +8,10 @@ import Modal from "~/components/Modal";
 import { ChangeTicket, FilterTicket } from "~/components/Popup";
 import styles from "./Tickets.module.scss";
 import { Popover } from "antd";
+import { CSVLink } from "react-csv";
+import { IHeaderCSV } from "~/interface";
+import { useAppSelector } from "~/redux/store";
+import { ticketFilterSelectors } from "~/redux/selectors";
 
 interface DataType {
     key: React.Key;
@@ -21,11 +25,11 @@ interface DataType {
     gate: string;
 }
 
-const dataSource: DataType[] = [];
+const data: DataType[] = [];
 
 for (let i = 1; i <= 30; i++) {
     if (i === 3 || i == 5)
-        dataSource.push({
+        data.push({
             key: i,
             index: i,
             bookingCode: "ALT20210501",
@@ -37,7 +41,7 @@ for (let i = 1; i <= 30; i++) {
             gate: "-",
         });
     else if (i % 2 == 0)
-        dataSource.push({
+        data.push({
             key: i,
             index: i,
             bookingCode: "ALT20210501",
@@ -49,7 +53,7 @@ for (let i = 1; i <= 30; i++) {
             gate: "Cổng 1",
         });
     else
-        dataSource.push({
+        data.push({
             key: i,
             index: i,
             bookingCode: "ALT20210501",
@@ -62,12 +66,25 @@ for (let i = 1; i <= 30; i++) {
         });
 }
 
+const headers: IHeaderCSV[] = [
+    { label: "STT", key: "index" },
+    { label: "Booking code", key: "bookingCode" },
+    { label: "Số vé", key: "ticketNumber" },
+    { label: "Tên sự kiện", key: "eventName" },
+    { label: "Tình trạng sử dụng", key: "status" },
+    { label: "Ngày sử dụng", key: "dateUsed" },
+    { label: "Ngày xuất vé", key: "createdAt" },
+    { label: "Cổng check - in", key: "gate" },
+];
+
 const cx = classNames.bind(styles);
 
 function Tickets() {
+    const { from, to, status, gate } = useAppSelector(ticketFilterSelectors);
+    const [dataSource, setDataSource] = useState<DataType[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [showChange, setShowChange] = useState<boolean>(false);
-
+    console.log({ from, to, status, gate });
     const columns: ColumnType[] = [
         {
             title: "STT",
@@ -145,6 +162,19 @@ function Tickets() {
             },
         },
     ];
+    // fake mock api
+    useEffect(() => {
+        setDataSource(data);
+    }, []);
+
+    useEffect(() => {
+        let dataRemain = [...data];
+        if (status !== "Tất cả")
+            dataRemain = dataRemain.filter((item) => item.status === status);
+        if (gate[0] !== "Tất cả")
+            dataRemain = dataRemain.filter((item) => gate.includes(item.gate));
+        setDataSource(dataRemain);
+    }, [from, to, status, gate]);
 
     return (
         <div className={cx("wrapper")}>
@@ -163,14 +193,21 @@ function Tickets() {
                     >
                         Lọc vé
                     </Button>
-                    <Button size="large" type="outline">
-                        Xuất file (.csv)
-                    </Button>
+                    <CSVLink
+                        className={cx("csv-btn")}
+                        data={dataSource}
+                        headers={headers}
+                        download={"Danh sách vé.csv"}
+                    >
+                        <Button size="large" type="outline">
+                            Xuất file (.csv)
+                        </Button>
+                    </CSVLink>
                 </div>
             </div>
             <Table columns={columns} rows={dataSource} />
             <Modal open={open} onHide={() => setOpen(false)}>
-                <FilterTicket />
+                <FilterTicket setOpen={setOpen} />
             </Modal>
             <Modal open={showChange} onHide={() => setShowChange(false)}>
                 <ChangeTicket onCancel={() => setShowChange(false)} />

@@ -2,11 +2,13 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./Button.module.scss";
+import { Spin } from "antd";
 
 const cx = classNames.bind(styles);
 
 type ButtonPropsType = {
     children: ReactNode;
+    loading?: boolean;
     to?: string;
     href?: string;
     type?: "primary" | "secondary" | "outline" | "rounded";
@@ -21,6 +23,7 @@ type ButtonPropsType = {
 
 function Button({
     children,
+    loading = false,
     to,
     href,
     type,
@@ -57,9 +60,11 @@ function Button({
     const classes = cx("wrapper", type, size, {
         [className]: className,
         disabled,
+        loading,
     });
     return (
         <Comp className={classes} {...props}>
+            {loading && <Spin size="small" className={cx("loading")} />}
             {leftIcon && <span className={cx("icon")}>{leftIcon}</span>}
             <span className={cx("title")}>{children}</span>
             {rightIcon && <span className={cx("icon")}>{rightIcon}</span>}

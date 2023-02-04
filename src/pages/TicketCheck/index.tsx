@@ -2,6 +2,7 @@ import { Col, DatePicker, Radio, Row } from "antd";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import Button from "~/components/Button";
+import Calendar from "~/components/Calendar";
 import Search from "~/components/Search";
 import Table, { ColumnType } from "~/components/Table";
 import styles from "./TicketCheck.module.scss";
@@ -173,7 +174,11 @@ const TicketCheck = () => {
                         <span className={cx("label")}>Từ ngày</span>
                     </Col>
                     <Col>
-                        <DatePicker disabled />
+                        <DatePicker
+                            disabled
+                            placeholder="Chọn ngày"
+                            showToday={false}
+                        />
                     </Col>
                 </Row>
                 <Row className={cx("row")}>
@@ -181,7 +186,7 @@ const TicketCheck = () => {
                         <span className={cx("label")}>Đến ngày</span>
                     </Col>
                     <Col>
-                        <DatePicker picker="week" />
+                        <DatePicker placeholder="Chọn ngày" showToday={false} />
                     </Col>
                 </Row>
                 <Button

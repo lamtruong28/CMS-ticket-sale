@@ -36,4 +36,11 @@
         color: var(--yellow-color-1);
         cursor: pointer;
     }
+
+    .csv-btn {
+        display: inline-block;
+        text-decoration: none;
+        color: inherit;
+        margin-right: 24px;
+    }
 }

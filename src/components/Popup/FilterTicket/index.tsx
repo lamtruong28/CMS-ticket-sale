@@ -5,6 +5,8 @@ import type { DatePickerProps } from "antd";
 import Button from "~/components/Button";
 import { Checkbox } from "~/components/Checkbox";
 import styles from "./FilterTicket.module.scss";
+import { useAppDispatch } from "~/redux/store";
+import ticketSlice from "~/redux/slice/ticketSlice";
 
 type StatusType = {
     label: string;
@@ -14,19 +16,19 @@ type StatusType = {
 const statusUse: StatusType[] = [
     {
         label: "Tất cả",
-        value: "all",
+        value: "Tất cả",
     },
     {
         label: "Đã sử dụng",
-        value: "used",
+        value: "Đã sử dụng",
     },
     {
         label: "Chưa sử dụng",
-        value: "not-used-yet",
+        value: "Chưa sử dụng",
     },
     {
         label: "Hết hạn",
-        value: "expire",
+        value: "Hết hạn",
     },
 ];
 
@@ -34,12 +36,17 @@ const options = ["Cổng 1", "Cổng 2", "Cổng 3", "Cổng 4", "Cổng 5"];
 
 const cx = classNames.bind(styles);
 
-const FilterTicket = () => {
-    const [status, setStatus] = useState<string>("all");
+type FilterTicketType = {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const FilterTicket = ({ setOpen }: FilterTicketType) => {
+    const [status, setStatus] = useState<string>("Tất cả");
     const [checkedAll, setCheckedAll] = useState<boolean>(true);
     const [gates, setGates] = useState<string[]>([]);
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
+    const dispatch = useAppDispatch();
 
     const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
@@ -74,9 +81,15 @@ const FilterTicket = () => {
     };
 
     const handleFilter = () => {
-        if (checkedAll) console.log(options);
-        console.log(gates);
-        console.log({ from, to });
+        dispatch(
+            ticketSlice.actions.setFilter({
+                from,
+                to,
+                status,
+                gate: checkedAll ? options : gates,
+            })
+        );
+        setOpen(false);
     };
     return (
         <div className={cx("wrapper")}>
@@ -86,6 +99,7 @@ const FilterTicket = () => {
                     <p className={cx("label")}>Từ ngày</p>
                     <DatePicker
                         className={cx("calendar")}
+                        showToday={false}
                         format={"DD/MM/YYYY"}
                         placeholder={"Chọn ngày"}
                         onChange={handleChooseDateFrom}
@@ -95,6 +109,7 @@ const FilterTicket = () => {
                     <p className={cx("label")}>Đến ngày</p>
                     <DatePicker
                         className={cx("calendar")}
+                        showToday={false}
                         format={"DD/MM/YYYY"}
                         placeholder={"Chọn ngày"}
                         onChange={handleChooseDateTo}

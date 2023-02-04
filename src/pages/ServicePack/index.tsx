@@ -1,15 +1,22 @@
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "~/components/Button";
 import { EditIcon } from "~/components/Icons";
 import Modal from "~/components/Modal";
 import { AddTicketPack, UpdateTicketPack } from "~/components/Popup";
 import Search from "~/components/Search";
 import Table, { ColumnType } from "~/components/Table";
+import { db } from "~/firebase/config";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useAppDispatch } from "~/redux/store";
+import { getTicketPackById } from "~/redux/slice/ticketPackSlice";
+import { CSVLink } from "react-csv";
+import { IHeaderCSV } from "~/interface";
+import useDebounce from "~/hooks/useDebounce";
 import styles from "./ServicePack.module.scss";
 
 interface DataType {
-    key: React.Key;
+    key?: string;
     index: number;
     packageCode: string;
     packageName: string;
@@ -20,35 +27,25 @@ interface DataType {
     status: string;
 }
 
-const dataSource: DataType[] = [
-    {
-        key: 1,
-        index: 1,
-        packageCode: "ALT20210501",
-        packageName: "Gói gia đình",
-        dateApply: "14/04/2021 08:00:00",
-        expire: "14/04/2021 23:00:00",
-        ticketPrice: "90.000 VNĐ",
-        comboPrice: "360.000 VNĐ/4 Vé",
-        status: "Đang áp dụng",
-    },
-    {
-        key: 2,
-        index: 2,
-        packageCode: "ALT20210501",
-        packageName: "Gói sự kiện",
-        dateApply: "14/04/2021 08:00:00",
-        expire: "14/04/2021 23:00:00",
-        ticketPrice: "20.000 VNĐ",
-        comboPrice: "-",
-        status: "Tắt",
-    },
+const headers: IHeaderCSV[] = [
+    { label: "STT", key: "index" },
+    { label: "Mã gói", key: "packageCode" },
+    { label: "Tên gói vé", key: "packageName" },
+    { label: "Ngày áp dụng", key: "dateApply" },
+    { label: "Ngày hết hạn", key: "expire" },
+    { label: "Giá vé (VNĐ/Vé)", key: "ticketPrice" },
+    { label: "Giá Combo (VNĐ/Combo)", key: "comboPrice" },
+    { label: "Tình trạng", key: "status" },
 ];
 
 const cx = classNames.bind(styles);
 const ServicePack = () => {
+    const dispatch = useAppDispatch();
     const [open, setOpen] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [dataSource, setDataSource] = useState<DataType[]>([]);
+    const [search, setSearch] = useState<string>("");
+    const debouncedSearchValue = useDebounce(search, 500);
     const columns: ColumnType[] = [
         {
             title: "STT",
@@ -99,10 +96,10 @@ const ServicePack = () => {
             },
         },
         {
-            render: () => (
+            render: (record: DataType) => (
                 <div
                     className={cx("edit-btn")}
-                    onClick={() => setOpenEdit(true)}
+                    onClick={() => handleClickUpdate(record)}
                 >
                     <EditIcon />{" "}
                     <span style={{ whiteSpace: "nowrap" }}>Cập nhật</span>
@@ -110,6 +107,51 @@ const ServicePack = () => {
             ),
         },
     ];
+
+    // Get realtime updates:
+    useEffect(() => {
+        const q = query(collection(db, "service-pack"), orderBy("packageCode"));
+        onSnapshot(q, (snapshot) => {
+            let data: DataType[] = [];
+            snapshot.docs.map((doc, index) => {
+                data.push({
+                    key: doc.id,
+                    index: index + 1,
+                    packageCode: doc.data().packageCode,
+                    packageName: doc.data().packageName,
+                    dateApply:
+                        doc.data().dateApply + " " + doc.data().timeApply,
+                    expire: doc.data().expire + " " + doc.data().timeExpire,
+                    ticketPrice: doc.data().retailPrice.checked
+                        ? doc.data().retailPrice.price + " VNĐ"
+                        : "-",
+                    comboPrice: doc.data().combo.checked
+                        ? doc.data().combo.price +
+                          " VNĐ/" +
+                          doc.data().combo.quantity +
+                          " vé"
+                        : "-",
+                    status: doc.data().status,
+                } as DataType);
+            });
+            // Handle search:
+            if (!debouncedSearchValue) setDataSource(data);
+            else
+                setDataSource(
+                    data.filter((item) =>
+                        item.packageCode
+                            .toLocaleUpperCase()
+                            .includes(debouncedSearchValue.toLocaleUpperCase())
+                    )
+                );
+        });
+    }, [debouncedSearchValue]);
+
+    const handleClickUpdate = async (record: DataType) => {
+        await dispatch(getTicketPackById(record.key as string));
+        setOpenEdit(true);
+    };
+
     return (
         <div className={cx("wrapper")}>
             <h1 className={cx("heading")}>Danh sách gói vé</h1>
@@ -117,16 +159,25 @@ const ServicePack = () => {
             <div className={cx("filter")}>
                 <Search
                     className={cx("search-box")}
-                    placeholder="Tìm bằng số vé"
+                    placeholder="Tìm bằng mã gói"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
                 <div className={cx("actions")}>
-                    <Button
-                        className={cx("button")}
-                        type="outline"
-                        size="large"
+                    <CSVLink
+                        className={cx("csv-btn")}
+                        data={dataSource}
+                        headers={headers}
+                        download={"Danh sách gói dịch vụ.csv"}
                     >
-                        Xuất file (.csv)
-                    </Button>
+                        <Button
+                            className={cx("button")}
+                            type="outline"
+                            size="large"
+                        >
+                            Xuất file (.csv)
+                        </Button>
+                    </CSVLink>
                     <Button
                         className={cx("button")}
                         type="primary"
