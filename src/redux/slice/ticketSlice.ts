@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 
 interface IFilter {
@@ -27,5 +27,7 @@ const ticketSlice = createSlice({
     },
     extraReducers: (builder) => {},
 });
+
+const fetchAllTicket = createAsyncThunk("fetchAllTicket", async () => {});
 
 export default ticketSlice;

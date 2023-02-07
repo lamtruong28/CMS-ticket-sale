@@ -1,10 +1,13 @@
 import { Col, DatePicker, Radio, Row } from "antd";
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import Button from "~/components/Button";
-import Calendar from "~/components/Calendar";
 import Search from "~/components/Search";
 import Table, { ColumnType } from "~/components/Table";
+import { db } from "~/firebase/config";
+import { IHeaderCSV } from "~/interface";
 import styles from "./TicketCheck.module.scss";
 
 type StatusType = {
@@ -13,7 +16,7 @@ type StatusType = {
 };
 
 interface DataType {
-    key: React.Key;
+    key: string;
     index: number;
     ticketNumber: string;
     eventName: string;
@@ -85,41 +88,49 @@ const columns: ColumnType[] = [
     },
 ];
 
-const dataSource: DataType[] = [];
-
-for (let i = 1; i <= 30; i++) {
-    if (i % 3 === 0)
-        dataSource.push({
-            key: i,
-            index: i,
-            ticketNumber: "123456789034",
-            eventName: "Hội chợ triển lãm tiêu dùng 2021",
-            dateUsed: "14/04/2021",
-            ticketType: "Vé cổng",
-            gate: "Cổng 1",
-            status: "Đã đối soát",
-        });
-    else
-        dataSource.push({
-            key: i,
-            index: i,
-            ticketNumber: "123456789034",
-            eventName: "Hội chợ triển lãm tiêu dùng 2021",
-            dateUsed: "14/04/2021",
-            ticketType: "Vé cổng",
-            gate: "Cổng 1",
-            status: "Chưa đối soát",
-        });
-}
+const headers: IHeaderCSV[] = [
+    { label: "STT", key: "index" },
+    { label: "Số vé", key: "ticketNumber" },
+    { label: "Tên sự kiện", key: "eventName" },
+    { label: "Ngày sử dụng", key: "dateUsed" },
+    { label: "Loại vé", key: "ticketType" },
+    { label: "Cổng check - in", key: "gate" },
+];
 
 const cx = classNames.bind(styles);
 const TicketCheck = () => {
     const [status, setStatus] = useState<string>("Tất cả");
-    const [data, setData] = useState<DataType[]>(dataSource);
     const [exportButton, setExportButton] = useState<boolean>(false);
+    const [dataSource, setDataSource] = useState<DataType[]>([]);
+    const [copyDataSource, setCopyDataSource] = useState<DataType[]>([]);
+    // Get realtime updates:
+    useEffect(() => {
+        const q = query(collection(db, "ticketCheck"), orderBy("ticketNumber"));
+        onSnapshot(q, (snapshot) => {
+            let data: DataType[] = [];
+            snapshot.docs.map((doc, index) => {
+                data.push({
+                    key: doc.id,
+                    index: index + 1,
+                    ticketNumber: doc.data().ticketNumber,
+                    eventName: doc.data().eventName,
+                    dateUsed: doc.data().dateUsed,
+                    ticketType: doc.data().ticketType,
+                    gate: doc.data().gate,
+                    status: doc.data().status,
+                } as DataType);
+            });
+            setDataSource(data);
+            setCopyDataSource(data);
+        });
+    }, []);
+
     const handleFilter = () => {
-        if (status === "Tất cả") setData(dataSource);
-        else setData(dataSource.filter((item) => item.status === status));
+        if (status === "Tất cả") setDataSource(copyDataSource);
+        else
+            setDataSource(
+                copyDataSource.filter((item) => item.status === status)
+            );
         setExportButton(status === "Đã đối soát");
     };
     return (
@@ -132,16 +143,23 @@ const TicketCheck = () => {
                         placeholder="Tìm bằng số vé"
                     />
                     {exportButton ? (
-                        <Button type="outline" size="large">
-                            Xuất file (.csv)
-                        </Button>
+                        <CSVLink
+                            style={{ textDecoration: "none" }}
+                            data={dataSource}
+                            headers={headers}
+                            download={"Danh sách đối soát vé.csv"}
+                        >
+                            <Button type="outline" size="large">
+                                Xuất file (.csv)
+                            </Button>
+                        </CSVLink>
                     ) : (
                         <Button type="primary" size="large">
                             Chốt đối soát
                         </Button>
                     )}
                 </div>
-                <Table columns={columns} rows={data} />
+                <Table columns={columns} rows={dataSource} />
             </div>
             <div className={cx("right")}>
                 <h2 className={cx("sub-heading")}>Lọc vé</h2>

@@ -12,9 +12,12 @@ import { CSVLink } from "react-csv";
 import { IHeaderCSV } from "~/interface";
 import { useAppSelector } from "~/redux/store";
 import { ticketFilterSelectors } from "~/redux/selectors";
+import { db } from "~/firebase/config";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import useDebounce from "~/hooks/useDebounce";
 
 interface DataType {
-    key: React.Key;
+    key: string;
     index: number;
     bookingCode: string;
     ticketNumber: string;
@@ -27,44 +30,44 @@ interface DataType {
 
 const data: DataType[] = [];
 
-for (let i = 1; i <= 30; i++) {
-    if (i === 3 || i == 5)
-        data.push({
-            key: i,
-            index: i,
-            bookingCode: "ALT20210501",
-            ticketNumber: "123456789034",
-            eventName: "Hội chợ triển lãm tiêu dùng 2021",
-            status: "Chưa sử dụng",
-            dateUsed: "",
-            createdAt: "14/04/2021",
-            gate: "-",
-        });
-    else if (i % 2 == 0)
-        data.push({
-            key: i,
-            index: i,
-            bookingCode: "ALT20210501",
-            ticketNumber: "123456789034",
-            eventName: "Hội chợ triển lãm tiêu dùng 2021",
-            status: "Đã sử dụng",
-            dateUsed: "14/04/2021",
-            createdAt: "14/04/2021",
-            gate: "Cổng 1",
-        });
-    else
-        data.push({
-            key: i,
-            index: i,
-            bookingCode: "ALT20210501",
-            ticketNumber: "123456789034",
-            eventName: "Hội chợ triển lãm tiêu dùng 2021",
-            status: "Hết hạn",
-            dateUsed: "",
-            createdAt: "14/04/2021",
-            gate: "-",
-        });
-}
+// for (let i = 1; i <= 30; i++) {
+//     if (i === 3 || i == 5)
+//         data.push({
+//             key: i,
+//             index: i,
+//             bookingCode: "ALT20210501",
+//             ticketNumber: "123456789034",
+//             eventName: "Hội chợ triển lãm tiêu dùng 2021",
+//             status: "Chưa sử dụng",
+//             dateUsed: "",
+//             createdAt: "14/04/2021",
+//             gate: "-",
+//         });
+//     else if (i % 2 == 0)
+//         data.push({
+//             key: i,
+//             index: i,
+//             bookingCode: "ALT20210501",
+//             ticketNumber: "123456789034",
+//             eventName: "Hội chợ triển lãm tiêu dùng 2021",
+//             status: "Đã sử dụng",
+//             dateUsed: "14/04/2021",
+//             createdAt: "14/04/2021",
+//             gate: "Cổng 1",
+//         });
+//     else
+//         data.push({
+//             key: i,
+//             index: i,
+//             bookingCode: "ALT20210501",
+//             ticketNumber: "123456789034",
+//             eventName: "Hội chợ triển lãm tiêu dùng 2021",
+//             status: "Hết hạn",
+//             dateUsed: "",
+//             createdAt: "14/04/2021",
+//             gate: "-",
+//         });
+// }
 
 const headers: IHeaderCSV[] = [
     { label: "STT", key: "index" },
@@ -80,11 +83,11 @@ const headers: IHeaderCSV[] = [
 const cx = classNames.bind(styles);
 
 function Tickets() {
-    const { from, to, status, gate } = useAppSelector(ticketFilterSelectors);
+    const { status, gate } = useAppSelector(ticketFilterSelectors);
     const [dataSource, setDataSource] = useState<DataType[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [showChange, setShowChange] = useState<boolean>(false);
-    console.log({ from, to, status, gate });
+    const [searchText, setSearchText] = useState<string>("");
     const columns: ColumnType[] = [
         {
             title: "STT",
@@ -162,25 +165,45 @@ function Tickets() {
             },
         },
     ];
-    // fake mock api
+    // Get realtime updates:
     useEffect(() => {
-        setDataSource(data);
-    }, []);
-
-    useEffect(() => {
-        let dataRemain = [...data];
-        if (status !== "Tất cả")
-            dataRemain = dataRemain.filter((item) => item.status === status);
-        if (gate[0] !== "Tất cả")
-            dataRemain = dataRemain.filter((item) => gate.includes(item.gate));
-        setDataSource(dataRemain);
-    }, [from, to, status, gate]);
-
+        const q = query(collection(db, "tickets"), orderBy("ticketNumber"));
+        onSnapshot(q, (snapshot) => {
+            let data: DataType[] = [];
+            snapshot.docs.map((doc, index) => {
+                data.push({
+                    key: doc.id,
+                    index: index + 1,
+                    bookingCode: doc.data().bookingCode,
+                    ticketNumber: doc.data().ticketNumber,
+                    eventName: doc.data().eventName,
+                    status: doc.data().status,
+                    dateUsed: doc.data().dateUsed ? doc.data().dateUsed : "-",
+                    createdAt: doc.data().createdAt,
+                    gate: doc.data().gate,
+                } as DataType);
+            });
+            if (status !== "Tất cả" && gate[0] !== "Tất cả")
+                setDataSource(
+                    data.filter(
+                        (item) =>
+                            item.status === status && gate.includes(item.gate)
+                    )
+                );
+            else if (status !== "Tất cả")
+                setDataSource(data.filter((item) => item.status === status));
+            else if (gate[0] !== "Tất cả")
+                setDataSource(data.filter((item) => gate.includes(item.gate)));
+            else setDataSource(data);
+        });
+    }, [status, gate]);
     return (
         <div className={cx("wrapper")}>
             <h1 className={cx("heading")}>Danh sách vé</h1>
             <div className={cx("filter")}>
                 <Search
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
                     className={cx("search-box")}
                     placeholder="Tìm bằng số vé"
                 />
